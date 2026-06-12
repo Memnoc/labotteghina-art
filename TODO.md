@@ -2,6 +2,18 @@
 
 _Last updated: 2026-06-12_
 
+## Matteo's checklist (do these, in order of value)
+
+1. [ ] **Web3Forms key** (~5 min) — sign up at https://web3forms.com with the
+       inbox that should receive inquiries; paste the access key to Claude.
+       Until then the inquiry form fails on submit.
+2. [ ] **Correct titles & years** — reply to Claude with fixes per slug
+       (current values are guesses; table in `src/content/works/*.md`).
+3. [ ] **Rewrite Stories in your voice** — or dictate, Claude places them.
+4. [ ] **Review About-page bio** — personalize the bottega narrative;
+       optional portrait/workspace photo.
+5. [ ] **Buy the domain** — then tell Claude the name; switch steps below.
+
 ## Done
 
 - [x] Design decisions resolved (see `CONTEXT.md` for shared language)
@@ -17,20 +29,8 @@ _Last updated: 2026-06-12_
 - [x] GitHub repo created (`Memnoc/labotteghina-art`), Pages enabled,
   CI deploy working (Node 22 pinned after Astro 6 engine failure)
 - [x] **Live:** https://memnoc.github.io/labotteghina-art/
-
-## Blocked on Matteo
-
-- [ ] **Web3Forms key** — inquiry form errors on submit until this exists.
-      Sign up at https://web3forms.com with the inbox that should receive
-      inquiries → give key to Claude → added as repo secret `WEB3FORMS_KEY`
-      + local `.env` → redeploy. ~5 minutes total.
-- [ ] **Title / year corrections** — all 21 works carry provisional Italian
-      titles and guessed year "2024". Reply with corrections per slug
-      (files in `src/content/works/*.md`).
-- [ ] **Stories rewrite** — current Stories are Claude's drafts. Rewrite in
-      your own voice, or dictate and Claude places them.
-- [ ] **About page bio** — current text is a draft of the bottega narrative;
-      review/personalize. Portrait or workspace photo optional.
+- [x] Licenses: MIT for code, all-rights-reserved for artwork
+  (`LICENSE`, `LICENSE-ARTWORK.md`; holder Matteo Stara — name confirmed)
 
 ## When domain is purchased
 
