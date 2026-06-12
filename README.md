@@ -62,3 +62,8 @@ One-time setup:
    GitHub's DNS instructions (CNAME for `www`, A/ALIAS records for apex).
 2. Update the variables: `SITE_URL` = `https://yourdomain.tld`, `BASE_PATH` = `/`.
 3. Keep "Enforce HTTPS" checked.
+
+## License
+
+Source code: MIT (`LICENSE`). Artwork: **all rights reserved** — see
+`LICENSE-ARTWORK.md`. The MIT grant does not extend to any image or Story.
