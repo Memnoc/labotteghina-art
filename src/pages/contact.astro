@@ -1,0 +1,44 @@
+---
+import Base from '../layouts/Base.astro';
+import InquiryForm from '../components/react/InquiryForm';
+
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+---
+
+<Base
+  title="Contact — La Botteghina"
+  description="Write to La Botteghina — inquiries about original works, prints, and commissions."
+>
+  <section class="contact container">
+    <header class="reveal">
+      <p class="eyebrow">Contact</p>
+      <h1 class="contact-title">Write to the workshop</h1>
+      <p class="contact-blurb">
+        Questions about a work, prints, or a commission — every message reaches
+        the artist directly.
+      </p>
+    </header>
+
+    <div class="reveal">
+      <InquiryForm client:load accessKey={accessKey} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact {
+    padding-top: clamp(3rem, 9vh, 6rem);
+    max-width: 52rem;
+  }
+
+  .contact-title {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    margin-top: 0.6rem;
+  }
+
+  .contact-blurb {
+    color: var(--c-muted);
+    max-width: var(--measure);
+    margin-block: 1.2rem 2.5rem;
+  }
+</style>

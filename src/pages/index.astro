@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Wall from '../components/Wall.astro';
+
+const works = (await getCollection('works')).sort(
+  (a, b) => a.data.order - b.data.order
+);
+const heroWorks = works.filter((w) => w.data.hero).slice(0, 3);
+---
+
+<Base
+  title="La Botteghina — old-master digital painting"
+  description="The digital bottega of an Italian painter — old-master technique, modern tools. Original works, available on inquiry."
+>
+  <Hero works={heroWorks.length > 0 ? heroWorks : works.slice(0, 3)} />
+  <Wall works={works} />
+</Base>

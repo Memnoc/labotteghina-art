@@ -1,0 +1,171 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image, getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import Lightbox from '../../components/react/Lightbox';
+import InquiryForm from '../../components/react/InquiryForm';
+
+export async function getStaticPaths() {
+  const works = (await getCollection('works')).sort(
+    (a, b) => a.data.order - b.data.order
+  );
+  return works.map((work, i) => ({
+    params: { slug: work.id },
+    props: {
+      work,
+      prev: works[i - 1] ?? works[works.length - 1],
+      next: works[i + 1] ?? works[0],
+    },
+  }));
+}
+
+const { work, prev, next } = Astro.props;
+const { Content } = await render(work);
+const base = import.meta.env.BASE_URL;
+
+const full = await getImage({ src: work.data.cover, width: 2200, format: 'webp' });
+const og = await getImage({ src: work.data.cover, width: 1200, format: 'jpeg' });
+const accessKey = import.meta.env.PUBLIC_WEB3FORMS_KEY ?? '';
+---
+
+<Base
+  title={`${work.data.title} (${work.data.year}) — La Botteghina`}
+  description={`${work.data.title}, ${work.data.year}. ${work.data.medium}. An original work from La Botteghina, available on inquiry.`}
+  ogImage={og.src}
+>
+  <article class="work container">
+    <div class="work-stage reveal">
+      <Lightbox client:visible src={full.src} alt={work.data.title}>
+        <Image
+          src={work.data.cover}
+          alt={work.data.title}
+          widths={[768, 1280, 1800]}
+          sizes="(max-width: 900px) 94vw, 70vw"
+          loading="eager"
+          class="work-main-image"
+        />
+      </Lightbox>
+    </div>
+
+    <header class="work-head reveal">
+      <h1 class="work-title">{work.data.title}</h1>
+      <p class="work-meta">
+        <span>{work.data.year}</span>
+        <span class="meta-dot" aria-hidden="true">·</span>
+        <span>{work.data.medium}</span>
+        <span class="meta-dot" aria-hidden="true">·</span>
+        <span>{work.data.dimensions}</span>
+      </p>
+    </header>
+
+    <div class="work-story reveal">
+      <Content />
+    </div>
+
+    <section class="work-inquiry reveal" id="inquire">
+      <p class="eyebrow">Interested in this work?</p>
+      <h2 class="inquiry-title">Inquire about “{work.data.title}”</h2>
+      <p class="inquiry-blurb">
+        Originals and fine-art prints are available on request. Write a few
+        lines and the artist will reply personally.
+      </p>
+      <InquiryForm client:visible workTitle={work.data.title} accessKey={accessKey} />
+    </section>
+
+    <nav class="work-nav" aria-label="More works">
+      <a href={`${base}works/${prev.id}/`} class="work-nav-link link-underline">
+        ← {prev.data.title}
+      </a>
+      <a href={base} class="work-nav-link link-underline">The Wall</a>
+      <a href={`${base}works/${next.id}/`} class="work-nav-link link-underline">
+        {next.data.title} →
+      </a>
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .work {
+    padding-top: clamp(2rem, 6vh, 4rem);
+  }
+
+  .work-stage {
+    max-width: 64rem;
+    margin-inline: auto;
+  }
+
+  .work-stage :global(.work-main-image) {
+    width: 100%;
+    box-shadow: 0 40px 110px -40px rgb(0 0 0 / 0.9);
+  }
+
+  .work-head {
+    max-width: 64rem;
+    margin: clamp(2rem, 5vh, 3.5rem) auto 0;
+  }
+
+  .work-title {
+    font-size: clamp(2.2rem, 5.5vw, 3.8rem);
+  }
+
+  .work-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+  }
+
+  .meta-dot {
+    color: var(--c-gold-dim);
+  }
+
+  .work-story {
+    max-width: var(--measure);
+    margin: clamp(2rem, 5vh, 3rem) auto 0;
+    font-size: 1.06rem;
+    color: color-mix(in srgb, var(--c-text) 88%, var(--c-muted));
+  }
+
+  .work-story :global(p:first-of-type)::first-letter {
+    font-family: var(--font-display);
+    font-size: 3.2em;
+    float: left;
+    line-height: 0.8;
+    padding-right: 0.12em;
+    color: var(--c-gold);
+  }
+
+  .work-inquiry {
+    max-width: 64rem;
+    margin: var(--space-section) auto 0;
+    border-top: 1px solid var(--c-line);
+    padding-top: clamp(2.5rem, 6vh, 4rem);
+  }
+
+  .inquiry-title {
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    margin-block: 0.6rem 0.4rem;
+  }
+
+  .inquiry-blurb {
+    color: var(--c-muted);
+    max-width: var(--measure);
+    margin-bottom: 2rem;
+  }
+
+  .work-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    max-width: 64rem;
+    margin: var(--space-section) auto 0;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--c-muted);
+  }
+</style>

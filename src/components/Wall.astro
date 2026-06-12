@@ -1,0 +1,89 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import WorkCard from './WorkCard.astro';
+
+interface Props {
+  works: CollectionEntry<'works'>[];
+}
+
+const { works } = Astro.props;
+---
+
+<section id="wall" class="wall container">
+  <header class="wall-head reveal">
+    <p class="eyebrow">The Wall</p>
+    <h2 class="wall-title">Selected works</h2>
+  </header>
+
+  <div class="wall-grid">
+    {works.map((work) => <WorkCard work={work} />)}
+  </div>
+</section>
+
+<script>
+  /* Subtle pointer tilt + glow tracking on work cards. */
+  const MAX_TILT = 2.4;
+
+  function setupTilt() {
+    const cards = document.querySelectorAll<HTMLElement>('[data-tilt]');
+    for (const card of cards) {
+      if (card.dataset.tiltReady) continue;
+      card.dataset.tiltReady = 'true';
+
+      card.addEventListener('pointermove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        card.style.setProperty('--tilt-y', `${(px - 0.5) * 2 * MAX_TILT}deg`);
+        card.style.setProperty('--tilt-x', `${(0.5 - py) * 2 * MAX_TILT}deg`);
+        card.style.setProperty('--glow-x', `${px * 100}%`);
+        card.style.setProperty('--glow-y', `${py * 100}%`);
+      });
+
+      card.addEventListener('pointerleave', () => {
+        card.style.setProperty('--tilt-x', '0deg');
+        card.style.setProperty('--tilt-y', '0deg');
+      });
+    }
+  }
+
+  setupTilt();
+  document.addEventListener('astro:page-load', setupTilt);
+</script>
+
+<style>
+  .wall {
+    padding-top: var(--space-section);
+  }
+
+  .wall-head {
+    margin-bottom: clamp(2.5rem, 6vh, 4.5rem);
+  }
+
+  .wall-title {
+    font-size: clamp(2rem, 4.5vw, 3.2rem);
+    margin-top: 0.5rem;
+  }
+
+  .wall-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: clamp(1.5rem, 5vw, 5rem);
+    row-gap: clamp(3rem, 8vh, 6.5rem);
+  }
+
+  /* Asymmetric hang: stagger alternating columns so it reads curated, not feed-like */
+  .wall-grid > :global(*:nth-child(4n + 2)),
+  .wall-grid > :global(*:nth-child(4n + 3)) {
+    margin-top: clamp(1.5rem, 4vh, 3.5rem);
+  }
+
+  @media (max-width: 720px) {
+    .wall-grid {
+      grid-template-columns: 1fr;
+    }
+    .wall-grid > :global(*) {
+      margin-top: 0;
+    }
+  }
+</style>

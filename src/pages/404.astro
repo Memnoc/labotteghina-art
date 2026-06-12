@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<Base
+  title="Not found — La Botteghina"
+  description="This page does not exist."
+>
+  <section class="lost container">
+    <p class="eyebrow">404</p>
+    <h1 class="lost-title">This wall is empty</h1>
+    <p class="lost-blurb">
+      Whatever hung here has been taken down — or never existed.
+    </p>
+    <a href={base} class="button-ghost">Back to the Wall</a>
+  </section>
+</Base>
+
+<style>
+  .lost {
+    padding-top: clamp(4rem, 14vh, 9rem);
+    text-align: center;
+  }
+
+  .lost-title {
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    margin-block: 0.6rem 0.8rem;
+  }
+
+  .lost-blurb {
+    color: var(--c-muted);
+    margin-bottom: 2.5rem;
+  }
+</style>
